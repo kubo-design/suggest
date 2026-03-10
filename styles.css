@@ -847,7 +847,7 @@ body.show-design .design-screen {
 .project-block__title {
   margin: 0 auto clamp(10px, 1.4vw, 18px);
   width: 100%;
-  padding: 0 0 0 clamp(14px, 2vw, 26px);
+  padding: 0 0 0 clamp(14px, 5vw, 10vw);
 }
 
 .project-block__title img {
