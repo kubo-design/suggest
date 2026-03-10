@@ -19,6 +19,7 @@
   <body class="is-loading">
     <div class="opening" aria-hidden="true">
       <div class="opening__frame">
+        <span class="opening__bgfade" aria-hidden="true"></span>
         <span class="opening__bar"></span>
         <span class="opening__blur"></span>
         <span class="opening__overlay"></span>
@@ -26,15 +27,45 @@
         <span class="opening__panel"></span>
         <span class="opening__line opening__line--1"></span>
         <span class="opening__line opening__line--2"></span>
+        <span class="opening__line opening__line--3"></span>
         <span class="opening__copy opening__copy--1"></span>
         <span class="opening__copy opening__copy--2"></span>
+        <span class="opening__copy opening__copy--3"></span>
         <span class="opening__logo"></span>
+        <div class="opening__controller" data-opening-controller>
+          <div class="opening__controller-row">
+            <button type="button" data-opening-play>再生</button>
+            <button type="button" data-opening-pause>停止</button>
+            <button type="button" data-opening-back>戻す</button>
+            <button type="button" data-opening-step>コマ送り</button>
+            <button type="button" data-opening-reload>再読込</button>
+          </div>
+          <div class="opening__controller-row">
+            <input
+              type="text"
+              placeholder="停止箇所ラベル"
+              data-opening-label-input
+            />
+            <button type="button" data-opening-label-add>ラベル追加</button>
+            <button type="button" data-opening-label-clear>全クリア</button>
+          </div>
+          <div class="opening__controller-row">
+            <label>
+              <input type="checkbox" data-opening-stop-after />
+              オープニング後に停止
+            </label>
+          </div>
+          <div class="opening__controller-list" data-opening-label-list></div>
+          <div class="opening__controller-scrub">
+            <input type="range" min="0" max="1000" value="0" data-opening-scrub />
+          </div>
+        </div>
       </div>
     </div>
     <div class="design-screen" aria-hidden="true">
       <div class="post-layout">
         <header class="post-layout__header">
-          <img src="img/header.png" alt="" />
+          <img src="img/header.png?v=20260310-1" alt="" />
         </header>
 
         <section class="project-block">
@@ -116,6 +147,7 @@
       </div>
     </div>
 
+    <script src="opening-controller.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
