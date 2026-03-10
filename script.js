@@ -369,7 +369,7 @@ const createOpeningSequenceController = (onStateChange) => {
   }
 
   const sequence = [
-    { stage: 'grow-x', duration: 0 },
+    { stage: 'grow-x', duration: 304 },
     { stage: 'image', duration: 500 },
     { stage: 'full', duration: 520 },
     { stage: 'overlay-fade', duration: 180 },
