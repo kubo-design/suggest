@@ -189,7 +189,7 @@ main,
 .opening__line {
   position: absolute;
   z-index: 2;
-  left: calc(50% - 189.76px);
+  left: calc(50% - 224px);
   width: 3px;
   height: 44.8px;
   background: #fff;
@@ -214,8 +214,8 @@ main,
 .opening__copy {
   position: absolute;
   z-index: 2;
-  left: calc(50% - 189.76px);
-  width: 379.52px;
+  left: calc(50% - 224px);
+  width: 448px;
   height: 44.8px;
   opacity: 0;
   transform: translateY(24px);
@@ -226,17 +226,17 @@ main,
 
 .opening__copy--1 {
   top: 331px;
-  background-image: url("img/copy1.png?v=20260310-1");
+  background-image: url("img/copy1.png?v=20260313-1");
 }
 
 .opening__copy--2 {
   top: 388.6px;
-  background-image: url("img/copy2.png?v=20260310-1");
+  background-image: url("img/copy2.png?v=20260313-1");
 }
 
 .opening__copy--3 {
   top: 446.2px;
-  background-image: url("img/copy3.png?v=20260310-1");
+  background-image: url("img/copy3.png?v=20260313-1");
 }
 
 .opening__logo {
@@ -663,8 +663,8 @@ main,
   width: 3px;
   opacity: 1;
   animation:
-    opening-line-grow 0.5s ease forwards,
-    opening-line-shrink 0.56s ease 0.5s forwards;
+    opening-line-grow 0.5s ease 0.5s forwards,
+    opening-line-shrink 0.56s ease 1s forwards;
 }
 
 .opening[data-stage="line2-pause"] .opening__copy--1 {
@@ -880,7 +880,7 @@ body.show-design .design-screen {
 
 .carousel__group img {
   display: block;
-  width: clamp(336px, 74.4vw, 1032px);
+  width: clamp(224px, 49.6vw, 688px);
   height: auto;
   border-radius: 0;
 }
@@ -1002,7 +1002,9 @@ body.show-design .design-screen {
 .topics-block {
   position: relative;
   width: 100%;
-  margin: 0 auto;
+  margin: 0px auto 10vw;
+  top: -10vw;
+  z-index: -5;
 }
 
 .topics-block__back {
@@ -1024,6 +1026,8 @@ body.show-design .design-screen {
 
 .topics-block__title {
   margin: 0 0 clamp(12px, 2vw, 24px);
+  top: 16vw;
+  position: absolute;
 }
 
 .topics-block__title img {
@@ -1036,6 +1040,8 @@ body.show-design .design-screen {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(10px, 1.6vw, 18px);
+  top: 20vw;
+  position: absolute;
 }
 
 .topics-block__grid img {
@@ -1375,13 +1381,13 @@ h2 {
   }
 
   to {
-    width: 379.52px;
+    width: 448px;
   }
 }
 
 @keyframes opening-line-shrink {
   from {
-    width: 379.52px;
+    width: 448px;
     opacity: 1;
   }
 

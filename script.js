@@ -387,6 +387,11 @@ const createOpeningSequenceController = (onStateChange) => {
     { stage: 'logo-hold', duration: 1400 },
     { stage: 'outro', duration: 280 }
   ];
+  const totalDuration = sequence.reduce((sum, step) => sum + step.duration, 0);
+  const cumulativeDurations = sequence.map((step, idx) => {
+    if (idx === 0) return 0;
+    return sequence.slice(0, idx).reduce((sum, item) => sum + item.duration, 0);
+  });
 
   let index = 0;
   let timerId = 0;
@@ -558,13 +563,28 @@ const createOpeningSequenceController = (onStateChange) => {
 
   const getState = () => {
     const stage = opening?.dataset.stage || '';
+    const safeIndex = Math.max(0, currentStageIndex);
+    const current = sequence[safeIndex];
+    const stageBaseElapsed = cumulativeDurations[safeIndex] || 0;
+    let stageElapsed = 0;
+    if (finished) {
+      stageElapsed = current?.duration || 0;
+    } else if (timerId) {
+      stageElapsed = Math.min(current?.duration || 0, performance.now() - stageStartedAt);
+    } else if (current) {
+      stageElapsed = Math.max(0, current.duration - remainingMs);
+    }
+    const elapsedMs = Math.min(totalDuration, stageBaseElapsed + stageElapsed);
     return {
       paused,
       finished,
       stage,
       bg: resolveOpeningBackgroundForStage(stage),
-      stageIndex: Math.max(0, currentStageIndex),
-      stageCount: sequence.length
+      stageIndex: safeIndex,
+      stageCount: sequence.length,
+      elapsedMs,
+      totalDurationMs: totalDuration,
+      progress: totalDuration > 0 ? elapsedMs / totalDuration : 0
     };
   };
 
@@ -584,8 +604,22 @@ const createOpeningSequenceController = (onStateChange) => {
     getState,
     setStageByRatio: (ratio) => {
       const clamped = Math.max(0, Math.min(1, ratio));
-      const idx = Math.round((sequence.length - 1) * clamped);
+      const targetMs = totalDuration * clamped;
+      let idx = sequence.length - 1;
+      for (let i = 0; i < sequence.length; i += 1) {
+        const start = cumulativeDurations[i];
+        const end = start + sequence[i].duration;
+        if (targetMs <= end || i === sequence.length - 1) {
+          idx = i;
+          break;
+        }
+      }
       setStageByIndex(idx);
+      const stageStart = cumulativeDurations[idx];
+      const stageDuration = sequence[idx].duration;
+      const offsetInStage = Math.max(0, Math.min(stageDuration, targetMs - stageStart));
+      remainingMs = Math.max(0, stageDuration - offsetInStage);
+      emitState();
     },
     setStageByName
   };
@@ -611,6 +645,15 @@ if (reducedMotion) {
         openingSequenceController.setStageByRatio(ratio);
       },
       getState: () => openingSequenceController.getState(),
+      playFromProgress: (progress) => {
+        const state = openingSequenceController.getState();
+        if (state?.finished) {
+          reopenOpening();
+        }
+        openingSequenceController.pause();
+        openingSequenceController.setStageByRatio(progress);
+        openingSequenceController.play();
+      },
       playFromStage: (stageName) => {
         const state = openingSequenceController.getState();
         if (state?.finished) {
@@ -627,6 +670,14 @@ if (reducedMotion) {
         }
         openingSequenceController.pause();
         openingSequenceController.setStageByName(stageName);
+      },
+      stopAtProgress: (progress) => {
+        const state = openingSequenceController.getState();
+        if (state?.finished) {
+          reopenOpening();
+        }
+        openingSequenceController.pause();
+        openingSequenceController.setStageByRatio(progress);
       }
     });
   }

@@ -30,7 +30,9 @@
 
   const isControllerVisible = () => {
     try {
-      return window.localStorage.getItem(CONTROLLER_VISIBLE_KEY) === '1';
+      const stored = window.localStorage.getItem(CONTROLLER_VISIBLE_KEY);
+      if (stored === null) return false;
+      return stored === '1';
     } catch (_err) {
       return false;
     }
@@ -227,7 +229,7 @@
     if (!root) return null;
     activeControllerRoot = root;
     const toggleBtn = ensureToggleButton(root);
-    root.style.display = isControllerVisible() ? '' : 'none';
+    setControllerVisible(isControllerVisible());
 
     const playBtn = q('[data-opening-play]');
     const pauseBtn = q('[data-opening-pause]');
@@ -252,6 +254,7 @@
             typeof item.stage === 'string' &&
             typeof item.text === 'string' &&
             (typeof item.stageIndex === 'number' || typeof item.stageIndex === 'undefined') &&
+            (typeof item.progress === 'number' || typeof item.progress === 'undefined') &&
             (typeof item.bg === 'string' || typeof item.bg === 'undefined')
         );
       } catch (_err) {
@@ -313,6 +316,9 @@
       if (!labelList) return;
       labelList.innerHTML = '';
       const getOrder = (entry) => {
+        if (typeof entry.progress === 'number' && Number.isFinite(entry.progress)) {
+          return entry.progress;
+        }
         if (typeof entry.stageIndex === 'number' && Number.isFinite(entry.stageIndex)) {
           return entry.stageIndex;
         }
@@ -336,8 +342,17 @@
         labelText.addEventListener('click', () => {
           const state = typeof opts.getState === 'function' ? opts.getState() : null;
           const isPaused = Boolean(state?.paused);
+          const hasProgress = typeof entry.progress === 'number' && Number.isFinite(entry.progress);
+          if (isPaused && hasProgress && typeof opts.stopAtProgress === 'function') {
+            opts.stopAtProgress(entry.progress);
+            return;
+          }
           if (isPaused && typeof opts.stopAtStage === 'function') {
             opts.stopAtStage(entry.stage || '', entry.bg || '');
+            return;
+          }
+          if (hasProgress && typeof opts.playFromProgress === 'function') {
+            opts.playFromProgress(entry.progress);
             return;
           }
           if (typeof opts.playFromStage === 'function') {
@@ -362,6 +377,7 @@
             stage: nextState.stage || 'unknown',
             text: nextText,
             stageIndex: nextState.stageIndex ?? 9999,
+            progress: nextState.progress,
             bg: nextState.bg || ''
           };
           writeLabelHistory(labels);
@@ -425,6 +441,7 @@
         stage: state.stage || 'unknown',
         text,
         stageIndex: state.stageIndex ?? 9999,
+        progress: state.progress,
         bg: state.bg || ''
       });
       writeLabelHistory(labels);
@@ -455,8 +472,13 @@
     return {
       update: (state) => {
         if (!scrub || !state) return;
-        const denom = Math.max(1, (state.stageCount || 1) - 1);
-        scrub.value = String(Math.round(((state.stageIndex || 0) / denom) * 1000));
+        const progress = typeof state.progress === 'number'
+          ? state.progress
+          : (() => {
+              const denom = Math.max(1, (state.stageCount || 1) - 1);
+              return (state.stageIndex || 0) / denom;
+            })();
+        scrub.value = String(Math.round(progress * 1000));
         markCurrentLabel(state.stage || '');
       },
       shouldStopAfterOpening: () => Boolean(stopAfterCheckbox?.checked),
