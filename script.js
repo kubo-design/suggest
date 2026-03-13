@@ -382,7 +382,7 @@ const createOpeningSequenceController = (onStateChange) => {
     { stage: 'line2-grow', duration: 320 },
     { stage: 'line2-reveal', duration: 680 },
     { stage: 'line2-pause', duration: 1200 },
-    { stage: 'line2-hold', duration: 1300 },
+    { stage: 'line2-hold', duration: 980 },
     { stage: 'logo-fade', duration: 2280 },
     { stage: 'logo-hold', duration: 1400 },
     { stage: 'outro', duration: 280 }

@@ -715,14 +715,14 @@ main,
   width: 3px;
   opacity: 1;
   animation:
-    opening-line-grow 0.5s ease 0.18s forwards,
-    opening-line-shrink 0.56s ease 0.68s forwards;
+    opening-line-grow 0.5s ease 0.08s forwards,
+    opening-line-shrink 0.56s ease 0.58s forwards;
 }
 
 .opening[data-stage="logo-fade"] .opening__copy--3 {
   opacity: 0;
   transform: translateY(24px);
-  animation: opening-copy-rise 0.6s ease 0.68s forwards;
+  animation: opening-copy-rise 0.6s ease 0.4s forwards;
 }
 
 .opening[data-stage="logo-hold"] .opening__copy--1,
