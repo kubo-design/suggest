@@ -880,7 +880,7 @@ body.show-design .design-screen {
 
 .carousel__group img {
   display: block;
-  width: clamp(186.6667px, 41.3333vw, 573.3333px);
+  width: clamp(168px, 37.2vw, 516px);
   height: auto;
   border-radius: 0;
 }
