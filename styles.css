@@ -258,7 +258,7 @@ main,
   right: 18px;
   bottom: 18px;
   z-index: 10000;
-  display: grid;
+  display: none;
   gap: 8px;
   padding: 8px;
   border-radius: 10px;
@@ -880,7 +880,7 @@ body.show-design .design-screen {
 
 .carousel__group img {
   display: block;
-  width: clamp(224px, 49.6vw, 688px);
+  width: clamp(186.6667px, 41.3333vw, 573.3333px);
   height: auto;
   border-radius: 0;
 }
